@@ -6,13 +6,20 @@ github.com/natzim/PingPongPi
 A basic object-oriented ping pong score tracker
 """
 
+import sqlite3
+
 
 class Player:
     points = 0
+    total_points = 0
     games_won = 0
 
     def __init__(self, name):
         self.name = name
+
+    def add_point(self):
+        self.points += 1
+        self.total_points += 1
 
     def win_game(self):
         print("%s wins the game!" % self.name)
@@ -21,7 +28,29 @@ class Player:
         self.opponent.points = 0
 
     def win_match(self):
-        print("%s wins the match! Starting new match..." % self.name)
+        print("%s wins the match! Adding to database..." % self.name)
+
+        conn = sqlite3.connect("pingpong.db")
+
+        conn.execute("drop table matches")
+
+        conn.execute("create table if not exists matches " +
+                     "(id integer primary key, " +
+                     "p1name text, p2name text," +
+                     "p1points int, p2points int," +
+                     "p1games int, p2games int)")
+
+        conn.execute("insert into matches (p1name, p2name, " +
+                     "p1points, p2points, p1games, p2games)" +
+                     "values (?, ?, ?, ?, ?, ?)",
+                     (self.name, self.opponent.name, self.total_points,
+                      self.opponent.total_points, self.games_won,
+                      self.opponent.games_won))
+
+        conn.commit()
+        conn.close()
+
+        print("Match added to database! Starting new match...")
         Match()
 
 
@@ -109,9 +138,9 @@ class Match:
         print_score = True
 
         if command == "1":
-            self.player1.points += 1
+            self.player1.add_point()
         elif command == "2":
-            self.player2.points += 1
+            self.player2.add_point()
         elif command == "exit":
             exit()
         elif command == "settings":
