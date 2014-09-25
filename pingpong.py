@@ -38,6 +38,13 @@ class Match:
         self.player1.opponent = self.player2
         self.player2.opponent = self.player1
 
+        self.set_first_server()
+
+        self.user_control()
+
+    def set_first_server(self):
+        set_server = True
+
         self.first_server = input("First server (1/2): ")
 
         if self.first_server == "1":
@@ -45,11 +52,12 @@ class Match:
         elif self.first_server == "2":
             self.first_server = self.player2
         else:
-            raise ValueError()
+            print("Please enter either 1 or 2!")
+            set_server = False
+            self.set_first_server()
 
-        self.current_server = self.first_server
-
-        self.user_control()
+        if set_server:
+            self.current_server = self.first_server
 
     def check_score(self):
         print_score = True
