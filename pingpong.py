@@ -40,9 +40,9 @@ class Match:
 
         self.first_server = input("First server (1/2): ")
 
-        if self.first_server is "1":
+        if self.first_server == "1":
             self.first_server = self.player1
-        elif self.first_server is "2":
+        elif self.first_server == "2":
             self.first_server = self.player2
         else:
             raise ValueError()
@@ -57,7 +57,7 @@ class Match:
 
         for player in [self.player1, self.player2]:
             if self.deuce:
-                if player.points - player.opponent.points is 2:
+                if player.points - player.opponent.points == 2:
                     player.win_game()
                     self.deuce = False
                     self.serve_turns = 2
@@ -65,24 +65,24 @@ class Match:
                     self.first_server = self.current_server
                     swap_servers = False
             else:
-                if (player.points is self.points_to_win - 1 and
-                        player.opponent.points is self.points_to_win - 1):
+                if (player.points == self.points_to_win - 1 and
+                        player.opponent.points == self.points_to_win - 1):
                     self.deuce = True
                     self.serve_turns = 1
-                if player.points is self.points_to_win:
+                if player.points == self.points_to_win:
                     player.win_game()
                     self.deuce = False
                     self.current_server = self.first_server.opponent
                     self.first_server = self.current_server
                     swap_servers = False
-                if player.games_won is self.games_to_win:
+                if player.games_won == self.games_to_win:
                     player.win_match()
                     print_score = False
 
         if print_score:
             if ((self.player1.points + self.player2.points)
-                    % self.serve_turns is 0 or
-                    self.player1.points + self.player2.points is 0):
+                    % self.serve_turns == 0 or
+                    self.player1.points + self.player2.points == 0):
                 if swap_servers:
                     self.current_server = self.current_server.opponent
 
@@ -98,17 +98,26 @@ class Match:
 
     def user_control(self):
         command = input("Command: ")
-        command_recognised = True
+        print_score = True
 
-        if command is "1":
+        if command == "1":
             self.player1.points += 1
-        elif command is "2":
+        elif command == "2":
             self.player2.points += 1
+        elif command == "exit":
+            exit()
+        elif command == "settings":
+            self.points_to_win = input("Points to win a game (%d): "
+                                       % self.points_to_win)
+            self.games_to_win = input("Games to win a match (%d): "
+                                      % self.games_to_win)
+            self.serve_turns = input("Serve truns (%d): " % self.serve_turns)
+            print_score = False
         else:
             print("Command not recognised")
-            command_recognised = False
+            print_score = False
 
-        if command_recognised and self.check_score():
+        if print_score and self.check_score():
             self.print_score()
 
         self.user_control()
