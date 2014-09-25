@@ -32,8 +32,6 @@ class Player:
 
         conn = sqlite3.connect("pingpong.db")
 
-        conn.execute("drop table matches")
-
         conn.execute("create table if not exists matches " +
                      "(id integer primary key, " +
                      "p1name text, p2name text," +
