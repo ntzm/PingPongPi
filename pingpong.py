@@ -32,18 +32,18 @@ class Player:
 
         conn = sqlite3.connect("pingpong.db")
 
-        conn.execute("create table if not exists matches " +
-                     "(id integer primary key, " +
-                     "p1name text, p2name text," +
-                     "p1points int, p2points int," +
-                     "p1games int, p2games int)")
+        conn.execute("""create table if not exists matches
+                        (id integer primary key,
+                        p1name text, p2name text,
+                        p1points int, p2points int,
+                        p1games int, p2games int)""")
 
-        conn.execute("insert into matches (p1name, p2name, " +
-                     "p1points, p2points, p1games, p2games)" +
-                     "values (?, ?, ?, ?, ?, ?)",
-                     (self.name, self.opponent.name, self.total_points,
-                      self.opponent.total_points, self.games_won,
-                      self.opponent.games_won))
+        conn.execute("""insert into matches
+                        (p1name, p2name, p1points, p2points, p1games, p2games)
+                        values (?, ?, ?, ?, ?, ?)""",
+                        (self.name, self.opponent.name, self.total_points,
+                         self.opponent.total_points, self.games_won,
+                         self.opponent.games_won))
 
         conn.commit()
         conn.close()
