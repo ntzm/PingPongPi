@@ -64,10 +64,10 @@ class Player:
 class Match:
     """Match class"""
 
-    points_to_win = 11
-    games_to_win = 2
     serve_turns = 2
     deuce = False
+    first_server = None
+    current_server = None
 
     def __init__(self):
         self.player1 = Player(input("Player 1 name: "))
@@ -115,17 +115,17 @@ class Match:
                     self.first_server = self.current_server
                     swap_servers = False
             else:
-                if (player.points == self.points_to_win - 1 and
-                        player.opponent.points == self.points_to_win - 1):
+                if (player.points == 11 - 1 and
+                        player.opponent.points == 11 - 1):
                     self.deuce = True
                     self.serve_turns = 1
-                if player.points == self.points_to_win:
+                if player.points == 11:
                     player.win_game()
                     self.deuce = False
                     self.current_server = self.first_server.opponent
                     self.first_server = self.current_server
                     swap_servers = False
-                if player.games_won == self.games_to_win:
+                if player.games_won == 2:
                     player.win_match()
                     print_score = False
 
@@ -160,13 +160,6 @@ class Match:
             self.player2.add_point()
         elif command == "exit":
             exit()
-        elif command == "settings":
-            self.points_to_win = input("Points to win a game (%d): "
-                                       % self.points_to_win)
-            self.games_to_win = input("Games to win a match (%d): "
-                                      % self.games_to_win)
-            self.serve_turns = input("Serve truns (%d): " % self.serve_turns)
-            print_score = False
         else:
             print("Command not recognised")
             print_score = False
