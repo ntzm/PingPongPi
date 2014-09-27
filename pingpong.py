@@ -10,6 +10,8 @@ import sqlite3
 
 
 class Player:
+    """Player class"""
+
     points = 0
     total_points = 0
     games_won = 0
@@ -18,16 +20,22 @@ class Player:
         self.name = name
 
     def add_point(self):
+        """Adds a point to the player's score"""
+
         self.points += 1
         self.total_points += 1
 
     def win_game(self):
+        """Prints who won the game then resets the points for next game"""
+
         print("%s wins the game!" % self.name)
         self.games_won += 1
         self.points = 0
         self.opponent.points = 0
 
     def win_match(self):
+        """Prints who won the match then adds the match to a database"""
+
         print("%s wins the match! Adding to database..." % self.name)
 
         conn = sqlite3.connect("pingpong.db")
@@ -41,9 +49,10 @@ class Player:
         conn.execute("""insert into matches
                         (p1name, p2name, p1points, p2points, p1games, p2games)
                         values (?, ?, ?, ?, ?, ?)""",
-                        (self.name, self.opponent.name, self.total_points,
-                         self.opponent.total_points, self.games_won,
-                         self.opponent.games_won))
+                     (self.name,
+                      self.opponent.name, self.total_points,
+                      self.opponent.total_points, self.games_won,
+                      self.opponent.games_won))
 
         conn.commit()
         conn.close()
@@ -53,6 +62,8 @@ class Player:
 
 
 class Match:
+    """Match class"""
+
     points_to_win = 11
     games_to_win = 2
     serve_turns = 2
@@ -70,6 +81,8 @@ class Match:
         self.user_control()
 
     def set_first_server(self):
+        """Gets input from players then sets the first server"""
+
         set_server = True
 
         self.first_server = input("First server (1/2): ")
@@ -87,6 +100,8 @@ class Match:
             self.current_server = self.first_server
 
     def check_score(self):
+        """Checks the score of the players"""
+
         print_score = True
         swap_servers = True
 
@@ -126,12 +141,16 @@ class Match:
         return print_score
 
     def print_score(self):
+        """Prints the score"""
+
         print("Name | P | G")
         for player in [self.player1, self.player2]:
             print("%s | %d | %d" % (player.name, player.points,
                                     player.games_won))
 
     def user_control(self):
+        """Gets and interprets the user commands"""
+
         command = input("Command: ")
         print_score = True
 
